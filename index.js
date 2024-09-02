@@ -59,7 +59,20 @@ async function checkVisited() {
 }
 
 app.get("/", async (req, res) => {
-  //code
+  try {
+  //get all users to display on the tabs
+  const usersResult = await checkUsers()
+  //get countries and color with currentUserId
+  const countries = await checkVisited()
+  res.render("index.ejs", {
+    countries: countries,
+    total: countries.length,
+    users: usersResult,
+    color: currentUser.color,
+  })
+  } catch (error) {
+    console.error(error.message)
+  }
 })
 
 app.listen(port, () => {
