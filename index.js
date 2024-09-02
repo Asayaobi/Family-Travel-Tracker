@@ -42,6 +42,22 @@ async function checkUsers() {
   }
 }
 
+async function checkVisited() {
+  try {
+    console.log('checkVisited UserId',currentUserId)
+    const result = await db.query('SELECT country_code FROM visited_countries JOIN users ON users.id = user_id WHERE user_id = $1', [currentUserId])
+    //create countries array of country_code
+    let countries = []
+      result.rows.forEach((country) => {
+      countries.push(country.country_code)
+    })
+    console.log('countries',countries)
+    return countries
+  } catch (error) {
+    console.error(error.message)
+  }
+}
+
 app.get("/", async (req, res) => {
   //code
 })
