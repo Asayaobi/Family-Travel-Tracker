@@ -23,6 +23,25 @@ db.connect().catch(err => {
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static("public"))
 
+//variables
+let currentUserId = 1
+let users = []
+let currentUser
+
+//functions
+async function checkUsers() {
+  try{
+    let result = await db.query("SELECT * FROM users")
+    //get all users
+    users = result.rows
+    //get current user
+    currentUser = users.find(user => user.id === Number(currentUserId))
+    return users
+  } catch (error) {
+    console.error(error.message)
+  }
+}
+
 app.get("/", async (req, res) => {
   //code
 })
