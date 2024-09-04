@@ -114,6 +114,23 @@ app.post("/add", async (req, res) => {
   }
 })
 
+app.post("/user", async (req, res) => {
+  try {
+    //show pages from selected tab bar
+    if (req.body.add){
+      res.render("new.ejs")
+    }
+    if (req.body.user){
+    // set currentUserId
+    currentUserId = req.body.user
+    //get query for visited countries data of that user
+    res.redirect("/")
+  }
+  }catch (error) {
+    console.error(error.message)
+  }
+})
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`)
 })
