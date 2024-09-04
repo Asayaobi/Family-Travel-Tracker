@@ -88,7 +88,6 @@ app.post("/add", async (req, res) => {
     //add countryCode to visited_countries table
     let countryCode = response.rows[0].country_code
     await db.query('INSERT INTO visited_countries (country_code, user_id) VALUES ($1, $2)',[countryCode, currentUserId])
-
     //in visited_countries table, country_code is set to unique, it'll show an error 'Duplicate key value violates unique constraint' with error.code === '23505'
     //if countryCode is a new country and get posted, reload the countries with get / after update the country
     res.redirect("/")
@@ -116,7 +115,7 @@ app.post("/add", async (req, res) => {
 
 app.post("/user", async (req, res) => {
   try {
-    //show pages from selected tab bar
+    //show each user from selected tab bar
     if (req.body.add){
       res.render("new.ejs")
     }
