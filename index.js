@@ -131,6 +131,21 @@ app.post("/user", async (req, res) => {
   }
 })
 
+app.post("/new", async (req, res) => {
+  try {
+    console.log('name',req.body.name, req.body.color)
+    //post new user
+    let response = await db.query(`INSERT INTO users (name, color) VALUES ($1, $2)`, [req.body.name, req.body.color])
+    console.log('post new user', response)
+    //if user is posted, redirect to homepage
+    if (response.rowCount === 1) {
+      res.redirect("/")
+    }
+  } catch (error) {
+    console.error(error.message)
+  }
+  })
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`)
 })
