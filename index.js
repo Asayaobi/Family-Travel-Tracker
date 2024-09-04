@@ -96,6 +96,11 @@ app.post("/add", async (req, res) => {
   } catch (error) {
     console.error(error.message)
 
+    // modify message for 'Duplicate key value violates unique constraint'
+    if (error.code === '23505') {
+      error.message = 'Country has already been added, try again';
+    }
+
     //pass all of the data including error message
     const usersResult = await checkUsers()
     const countries = await checkVisited()
