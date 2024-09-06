@@ -13,8 +13,9 @@ const port = process.env.PORT || 3000
 const db = new pg.Client({
   connectionString: process.env.DATABASE_URL,
   ssl: {
-    rejectUnauthorized: false
-  }
+    rejectUnauthorized: false,
+  },
+  keepAlive: true, // Ensures the connection stays alive to avoid idle timeouts
 })
 
 db.connect().catch(err => {
