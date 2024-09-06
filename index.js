@@ -18,9 +18,19 @@ const db = new pg.Client({
   keepAlive: true, // Ensures the connection stays alive to avoid idle timeouts
 })
 
-db.connect().catch(err => {
-  console.error('Connection error', err.stack);
-})
+const connectToDb = async () => {
+  try {
+    await db.connect()
+    console.log("Connected to the database successfully")
+  } catch (err) {
+    console.error("Connection error", err.stack)
+    // Retry connection in case of failure
+    setTimeout(connectToDb, 5000) // Retry every 5 seconds
+  }
+}
+
+connectToDb() // Initial connection attempt
+
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.static("public"))
 
