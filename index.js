@@ -145,6 +145,10 @@ app.post("/user", async (req, res) => {
 
 app.post("/new", async (req, res) => {
   try {
+    //throw error if name or color is missing
+    if (!req.body.name || !req.body.color){
+      throw new Error('Please enter your name and select your color')
+    }
     //post new user
     let response = await db.query(`INSERT INTO users (name, color) VALUES ($1, $2)`, [req.body.name, req.body.color])
     //if user is posted, redirect to homepage
@@ -153,6 +157,12 @@ app.post("/new", async (req, res) => {
     }
   } catch (error) {
     console.error(error.message)
+    if (error.code === '23505' && error.constraint === 'users_name_key') {
+    // Handle unique constraint violation for username
+      return res.render("new.ejs", { error: 'Username already exists' })
+    }
+    // Handle other types of errors
+    return res.render("new.ejs", { error: error.message })
   }
   })
 
