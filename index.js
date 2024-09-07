@@ -42,7 +42,7 @@ let currentUser
 //functions
 async function checkUsers() {
   try{
-    let result = await db.query("SELECT * FROM users")
+    let result = await db.query("SELECT * FROM users ORDER BY id ASC")
     //get all users
     users = result.rows
     //get current user
