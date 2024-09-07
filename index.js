@@ -85,8 +85,12 @@ app.get("/", async (req, res) => {
 })
 
 app.post("/add", async (req, res) => {
-  try {
+  try {    
     let country = req.body.country
+    //throw error if user doesn't type country name
+    if (!country){
+      throw new Error('Please enter country name')
+    }
     //check the country code from countries table/ loosely match the country in case of incomplete name or upper/lowercase with LIKE, wildcards
     let response = await db.query("SELECT country_code FROM countries WHERE LOWER(country_name) LIKE '%'|| $1 ||'%'", [country.toLowerCase()])
     // If country_code is not found, no rows were returned, handle the error
@@ -104,10 +108,9 @@ app.post("/add", async (req, res) => {
 
   } catch (error) {
     console.error(error.message)
-
     // modify message for 'Duplicate key value violates unique constraint'
     if (error.code === '23505') {
-      error.message = 'Country has already been added, try again';
+      error.message = 'Country has already been added, try again'
     }
 
     //pass all of the data including error message
