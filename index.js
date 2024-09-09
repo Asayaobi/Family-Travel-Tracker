@@ -10,12 +10,15 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 const app = express()
 const port = process.env.PORT || 3000
 
-const db = new pg.Client({
-  connectionString: process.env.DATABASE_URL,
+const { Pool } = pg
+const DBURL = process.env.DATABASE_URL
+
+// Database connection parameters
+const db = new Pool({
   ssl: {
-    rejectUnauthorized: false,
+    rejectUnauthorized: false
   },
-  keepAlive: true, // Ensures the connection stays alive to avoid idle timeouts
+  connectionString: DBURL
 })
 
 const connectToDb = async () => {
