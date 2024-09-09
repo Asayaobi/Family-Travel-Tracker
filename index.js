@@ -10,18 +10,16 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 const app = express()
 const port = process.env.PORT || 3000
 
-const { Pool } = pg
-const DBURL = process.env.DATABASE_URL
+app.use(bodyParser.urlencoded({ extended: true }))
+app.use(express.static("public"))
 
-// Database connection parameters
-const db = new Pool({
-  ssl: {
-    rejectUnauthorized: false
-  },
-  connectionString: DBURL
-})
+//variables
+let currentUserId = 1
+let users = []
+let currentUser
 
-const connectToDb = async () => {
+//functions
+async function connectToDb() {
   try {
     await db.connect()
     console.log("Connected to the database successfully")
@@ -32,17 +30,6 @@ const connectToDb = async () => {
   }
 }
 
-connectToDb() // Initial connection attempt
-
-app.use(bodyParser.urlencoded({ extended: true }))
-app.use(express.static("public"))
-
-//variables
-let currentUserId = 1
-let users = []
-let currentUser
-
-//functions
 async function checkUsers() {
   try{
     let result = await db.query("SELECT * FROM users ORDER BY id ASC")
@@ -70,6 +57,19 @@ async function checkVisited() {
   }
 }
 
+// Database connection parameters
+const { Pool } = pg
+const DBURL = process.env.DATABASE_URL
+const db = new Pool({
+  ssl: {
+    rejectUnauthorized: false
+  },
+  connectionString: DBURL
+})
+
+connectToDb() // Initial connection attempt
+
+//routes
 app.get("/", async (req, res) => {
   try {
   //get all users to display on the tabs
